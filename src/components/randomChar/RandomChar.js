@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import './randomChar.scss';
-// import thor from '../../resources/img/thor.jpeg';
 import mjolnir from '../../resources/img/mjolnir.png';
 import MarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
@@ -17,12 +16,12 @@ class RandomChar extends Component {
 
 	componentDidMount() {
 		this.updateChar();
-		// this.timerId = setInterval(this.updateChar, 5000);
-		// console.log('mount');
+		this.timerId = setInterval(this.updateChar, 50000);
+		console.log('mount');
 	}
 
 	componentWillUnmount() {
-		// clearInterval(this.timerId);
+		clearInterval(this.timerId);
 	}
 
 	onCharLoading = () => {
@@ -32,7 +31,6 @@ class RandomChar extends Component {
 	};
 
 	onCharLoaded = (char) => {
-		// console.log('update');
 		this.setState({ char, loading: false, error: false });
 	};
 
@@ -45,13 +43,12 @@ class RandomChar extends Component {
 
 	updateChar = () => {
 		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-		// const id = 1011793;
+		
 		this.onCharLoading();
 		this.marvelService.getCharacter(id).then(this.onCharLoaded).catch(this.onError);
 	};
 
 	render() {
-		// console.log('render');
 		const { char, loading, error } = this.state;
 		const errorMessage = error ? <ErrorMessage /> : null;
 		const spinner = loading ? <Spinner /> : null;
@@ -87,9 +84,7 @@ const View = ({ char }) => {
 			<img
 				src={thumbnail}
 				alt="Random character"
-				className={
-					thumbnail.includes('image_not_available') ? 'randomchar__img-not-found' : 'randomchar__img'
-				}
+				className={thumbnail.includes('image_not_available') ? 'randomchar__img-not-found' : 'randomchar__img'}
 			/>
 			<div className="randomchar__info">
 				<p className="randomchar__name">{name}</p>
@@ -108,4 +103,3 @@ const View = ({ char }) => {
 };
 
 export default RandomChar;
-

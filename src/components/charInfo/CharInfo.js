@@ -34,7 +34,10 @@ class CharInfo extends Component {
 
 		this.onCharLoading();
 
-		this.marvelService.getCharacter(charId).then(this.onCharLoaded).catch(this.onError);
+		this.marvelService
+			.getCharacter(charId)
+			.then(this.onCharLoaded)
+			.catch(this.onError);
 	};
 
 	onCharLoading = () => {
@@ -44,7 +47,11 @@ class CharInfo extends Component {
 	};
 
 	onCharLoaded = (char) => {
-		this.setState({ char, loading: false, error: false });
+		this.setState({
+			char,
+			loading: false,
+			// error: false
+		});
 	};
 
 	onError = () => {
@@ -102,6 +109,8 @@ const View = ({ char }) => {
 			<ul className="char__comics-list">
 				{comics.length === 0 ? 'there is no comics with this character' : null}
 				{comics.map((item, i) => {
+					// eslint-disable-next-line array-callback-return
+					if (i > 9) return;
 					return (
 						<li key={i} className="char__comics-item">
 							{item.name}
