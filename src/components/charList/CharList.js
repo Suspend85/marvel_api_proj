@@ -1,4 +1,5 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import MarvelService from '../../services/MarvelService';
@@ -12,7 +13,9 @@ class CharList extends Component {
 		newItemLoading: false,
 		offset: 0,
 		charEnded: false,
+		activeChar: '',
 	};
+	myRef = React.createRef();
 
 	marvelService = new MarvelService();
 
@@ -22,7 +25,10 @@ class CharList extends Component {
 
 	onRequest = (offset) => {
 		this.onCharListLoading();
-		this.marvelService.getAllCharacters(offset).then(this.onCharListLoaded).catch(this.onError);
+		this.marvelService
+			.getAllCharacters(offset) // когда получаем элементы с сервера
+			.then(this.onCharListLoaded) // запускается и получает в себя как аргумент - новый массив с новыми персонажами
+			.catch(this.onError);
 	};
 
 	onCharListLoading = () => {
@@ -55,13 +61,20 @@ class CharList extends Component {
 
 	renderItems(arr) {
 		const items = arr.map((item) => {
+			const onActiveChar = () => {
+				this.setState({ activeChar: item.id });
+				this.props.onCharSelected(item.id);
+			};
+			const active = this.state.activeChar === item.id,
+				clazz = active ? 'char__item char__item_selected' : 'char__item';
+
 			let imgStyle = { objectFit: 'cover' };
-			if (item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+			if (item.thumbnail.includes('image_not_available')) {
 				imgStyle = { objectFit: 'unset' };
 			}
 
 			return (
-				<li className="char__item" key={item.id} onClick={() => this.props.onCharSelected(item.id)}>
+				<li className={clazz} key={item.id} onClick={onActiveChar} onFocus={onActiveChar} tabIndex={0}>
 					<img src={item.thumbnail} alt={item.name} style={imgStyle} />
 					<div className="char__name">{item.name}</div>
 				</li>
@@ -96,5 +109,9 @@ class CharList extends Component {
 		);
 	}
 }
+
+CharList.propTypes = {
+	onCharSelected: PropTypes.func.isRequired,
+};
 
 export default CharList;

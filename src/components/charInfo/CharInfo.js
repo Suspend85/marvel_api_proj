@@ -34,10 +34,7 @@ class CharInfo extends Component {
 
 		this.onCharLoading();
 
-		this.marvelService
-			.getCharacter(charId)
-			.then(this.onCharLoaded)
-			.catch(this.onError);
+		this.marvelService.getCharacter(charId).then(this.onCharLoaded).catch(this.onError);
 	};
 
 	onCharLoading = () => {
@@ -123,4 +120,3 @@ const View = ({ char }) => {
 };
 
 export default CharInfo;
-
