@@ -24,6 +24,7 @@ const CharList = (props) => {
 		if (newItemLoading && !charEnded) {
 			onRequest();
 		}
+		// eslint-disable-next-line
 	}, [newItemLoading]);
 
 	const onScroll = () => {
